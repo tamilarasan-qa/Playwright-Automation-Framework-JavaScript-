@@ -108,15 +108,15 @@ test('Naukri Profile Update', async ({ page }) => {
     await page.locator('#lazyKeySkills').getByText('editOneTheme').click();
     await page.waitForTimeout(2000);
     await page.locator('div:nth-child(17) > .material-icons').click();
-    await page.waitForTimeout(1000);
+    await page.waitForTimeout(2000);
     // await page.getByRole('textbox', { name: 'Add skills' }).click();
     await page.getByRole('combobox', { name: 'Add skills' }).click();
-    await page.waitForTimeout(1000);
+    await page.waitForTimeout(2000);
 
     const addSkills = page.getByRole('combobox', { name: 'Add skills' });
     await addSkills.click();
     await addSkills.pressSequentially('Jira', { delay: 150 });
-    await page.waitForTimeout(3500);
+    await page.waitForTimeout(4500);
 
     const jiraSuggestion = page
         .locator('#sugDrp_keySkillSugg')
