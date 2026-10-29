@@ -7,8 +7,12 @@ const fs = require('fs');
 
 const PROJECT_ROOT = path.resolve(__dirname, '..');
 
+// Folder where the Playwright script saves QA_Outreach.xlsx
+const OUTPUT_DIR =
+  'D:\\script\\script\\Playwright_Automation\\tests\\output';
+
 const EXCEL_FILE = path.join(
-  PROJECT_ROOT,
+  OUTPUT_DIR,
   'QA_Outreach.xlsx'
 );
 
