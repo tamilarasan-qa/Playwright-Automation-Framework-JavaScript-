@@ -1,0 +1,21 @@
+2026/11/12-16:36:43.606 5be0 Reusing MANIFEST D:\script\script\Playwright_Automation\.naukri-profile\Default\IndexedDB\https_www.naukri.com_0.indexeddb.leveldb/MANIFEST-000001
+2026/11/12-16:36:43.607 5be0 Recovering log #6
+2026/11/12-16:36:43.612 5be0 Reusing old log D:\script\script\Playwright_Automation\.naukri-profile\Default\IndexedDB\https_www.naukri.com_0.indexeddb.leveldb/000006.log 
+2026/11/12-16:39:44.494 5be0 Level-0 table #11: started
+2026/11/12-16:39:44.513 5be0 Level-0 table #11: 1465101 bytes OK
+2026/11/12-16:39:44.516 5be0 Delete type=0 #6
+2026/11/12-16:40:06.624 bb4 Compacting 1@1 + 1@2 files
+2026/11/12-16:40:06.712 bb4 Generated table #12@1: 121 keys, 39808 bytes
+2026/11/12-16:40:06.712 bb4 Compacted 1@1 + 1@2 files => 39808 bytes
+2026/11/12-16:40:06.713 bb4 compacted to: files[ 0 0 1 0 0 0 0 ]
+2026/11/12-16:40:06.714 bb4 Delete type=2 #8
+2026/11/12-16:40:06.715 bb4 Delete type=2 #11
+2026/11/12-16:42:45.454 30d8 Level-0 table #14: started
+2026/11/12-16:42:45.480 30d8 Level-0 table #14: 1458873 bytes OK
+2026/11/12-16:42:45.482 30d8 Delete type=0 #10
+2026/11/12-16:43:07.571 5be0 Compacting 1@1 + 1@2 files
+2026/11/12-16:43:07.620 5be0 Generated table #15@1: 116 keys, 48311 bytes
+2026/11/12-16:43:07.620 5be0 Compacted 1@1 + 1@2 files => 48311 bytes
+2026/11/12-16:43:07.622 5be0 compacted to: files[ 0 0 1 0 0 0 0 ]
+2026/11/12-16:43:07.622 5be0 Delete type=2 #12
+2026/11/12-16:43:07.622 5be0 Delete type=2 #14
