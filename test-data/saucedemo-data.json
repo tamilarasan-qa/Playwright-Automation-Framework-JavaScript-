@@ -1,0 +1,36 @@
+{
+  "baseUrl": "https://www.saucedemo.com/",
+  "inventoryUrl": "https://www.saucedemo.com/inventory.html",
+  "users": {
+    "standard": {
+      "username": "standard_user",
+      "password": "secret_sauce"
+    },
+    "lockedOut": {
+      "username": "locked_out_user",
+      "password": "secret_sauce"
+    },
+    "invalidUsername": "invalid_user",
+    "invalidPassword": "wrong_password"
+  },
+  "products": [
+    { "name": "Sauce Labs Backpack", "price": 29.99 },
+    { "name": "Sauce Labs Bike Light", "price": 9.99 },
+    { "name": "Sauce Labs Bolt T-Shirt", "price": 15.99 },
+    { "name": "Sauce Labs Fleece Jacket", "price": 49.99 },
+    { "name": "Sauce Labs Onesie", "price": 7.99 },
+    { "name": "Test.allTheThings() T-Shirt (Red)", "price": 15.99 }
+  ],
+  "sortOptions": {
+    "priceLowToHigh": "lohi",
+    "priceHighToLow": "hilo"
+  },
+  "checkout": {
+    "firstName": "QA",
+    "lastName": "Automation",
+    "postalCode": "90210",
+    "itemTotal": "Item total: $29.99",
+    "tax": "Tax: $2.40",
+    "total": "Total: $32.39"
+  }
+}
