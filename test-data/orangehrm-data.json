@@ -1,0 +1,45 @@
+{
+  "baseUrl": "https://opensource-demo.orangehrmlive.com/",
+  "users": {
+    "valid": {
+      "username": "Admin",
+      "password": "admin123"
+    },
+    "invalidUsername": "invalid_user",
+    "invalidPassword": "wrong_password"
+  },
+  "navigationModules": [
+    "Admin",
+    "PIM",
+    "Leave",
+    "Time",
+    "Recruitment",
+    "My Info",
+    "Performance",
+    "Dashboard",
+    "Directory",
+    "Maintenance",
+    "Claim",
+    "Buzz"
+  ],
+  "leaveFilters": [
+    "From Date",
+    "To Date",
+    "Show Leave with Status",
+    "Leave Type",
+    "Employee Name",
+    "Sub Unit"
+  ],
+  "leaveColumns": [
+    "Date",
+    "Employee Name",
+    "Leave Type",
+    "Leave Balance (Days)",
+    "Number of Days",
+    "Status",
+    "Comments",
+    "Actions"
+  ],
+  "leaveSearchName": "No Matching Employee",
+  "directorySearchPrefix": "a"
+}

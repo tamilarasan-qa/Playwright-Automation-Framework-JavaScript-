@@ -54,7 +54,16 @@ jobs:
         run: npx playwright install --with-deps
 
       # ============================================================
-      # 5. RUN SAUCEDEMO TESTS
+      # 5. RUN ORANGEHRM TESTS
+      # ============================================================
+
+      - name: Run Orangehrm tests
+        if: ${{ always() && !cancelled() }}
+        run: |
+          npx playwright test tests/orangehrm/
+
+      # ============================================================
+      # 6. RUN SAUCEDEMO TESTS
       # ============================================================
 
       - name: Run SauceDemo tests
@@ -62,9 +71,8 @@ jobs:
         run: |
           npx playwright test tests/saucedemo/
 
-
       # ============================================================
-      # 6. UPLOAD PLAYWRIGHT REPORT
+      # 7. UPLOAD PLAYWRIGHT REPORT
       # ============================================================
 
       - name: Upload Playwright report
