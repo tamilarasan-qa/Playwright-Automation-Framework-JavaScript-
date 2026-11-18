@@ -1,0 +1,59 @@
+{
+  "baseUrl": "https://parabank.parasoft.com/parabank/index.htm",
+  "users": {
+    "demo": {
+      "username": "john",
+      "password": "demo"
+    },
+    "invalidUsername": "qa_invalid_user",
+    "invalidPassword": "qa_invalid_password"
+  },
+  "registration": {
+    "usernamePrefix": "qa_parabank",
+    "password": "QaDemoPass123",
+    "customer": {
+      "firstName": "Taylor",
+      "lastName": "Quality",
+      "street": "100 Test Lane",
+      "city": "Testville",
+      "state": "NY",
+      "zipCode": "10001",
+      "phoneNumber": "5550101000",
+      "ssn": "999-00-0001"
+    }
+  },
+  "accountSelection": {
+    "minimumAvailableForDemoTransaction": 0.02
+  },
+  "transfer": {
+    "amount": "0.01",
+    "invalidAmount": "not-a-number"
+  },
+  "billPayment": {
+    "amount": "0.01",
+    "payee": {
+      "name": "QA Demo Utility",
+      "street": "200 Sample Road",
+      "city": "Testville",
+      "state": "NY",
+      "zipCode": "10002",
+      "phoneNumber": "5550102000",
+      "accountNumber": "5550001234",
+      "verifyAccount": "5550001234"
+    }
+  },
+  "profileUpdate": {
+    "firstName": "Taylor",
+    "lastName": "QA",
+    "street": "300 Automation Avenue",
+    "city": "Testville",
+    "state": "NY",
+    "zipCode": "10003",
+    "phoneNumber": "5550103000"
+  },
+  "observedDemoLimitations": [
+    "Registration rejected four distinct synthetic usernames, including one with a unique synthetic SSN, with the message 'This username already exists.' during MCP inspection.",
+    "Valid synthetic bill-payment submissions returned 'An internal error has occurred and has been logged.' in both execution attempts.",
+    "Profile edits persist on the shared demo user, so update scenarios are skipped until registration can provide isolated test accounts."
+  ]
+}
