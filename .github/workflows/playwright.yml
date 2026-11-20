@@ -39,11 +39,12 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium
 
-      # 5. Run OrangeHRM and SauceDemo tests
+      # 5. Run OrangeHRM ,SauceDemo, Parabank tests
       - name: Run Playwright tests
         run: |
           npx playwright test tests/orangehrm/
           npx playwright test tests/saucedemo/
+          npx playwright test tests/parabank/
 
       # 6. Upload HTML report
       - name: Upload Playwright report
