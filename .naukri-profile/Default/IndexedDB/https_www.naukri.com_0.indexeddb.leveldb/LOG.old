@@ -1,0 +1,14 @@
+2026/11/11-18:32:22.347 2ccc Creating DB D:\script\script\Playwright_Automation\.naukri-profile\Default\IndexedDB\https_www.naukri.com_0.indexeddb.leveldb since it was missing.
+2026/11/11-18:32:22.351 2ccc Reusing MANIFEST D:\script\script\Playwright_Automation\.naukri-profile\Default\IndexedDB\https_www.naukri.com_0.indexeddb.leveldb/MANIFEST-000001
+2026/11/11-18:35:47.618 2ccc Level-0 table #5: started
+2026/11/11-18:35:47.655 2ccc Level-0 table #5: 1464401 bytes OK
+2026/11/11-18:35:47.659 2ccc Delete type=0 #3
+2026/11/11-18:38:42.897 2ccc Level-0 table #7: started
+2026/11/11-18:38:42.922 2ccc Level-0 table #7: 1458172 bytes OK
+2026/11/11-18:38:42.925 2ccc Delete type=0 #4
+2026/11/11-18:38:58.418 2ccc Compacting 1@1 + 1@2 files
+2026/11/11-18:38:58.455 2ccc Generated table #8@1: 116 keys, 49091 bytes
+2026/11/11-18:38:58.455 2ccc Compacted 1@1 + 1@2 files => 49091 bytes
+2026/11/11-18:38:58.457 2ccc compacted to: files[ 0 0 1 0 0 0 0 ]
+2026/11/11-18:38:58.458 2ccc Delete type=2 #5
+2026/11/11-18:38:58.458 2ccc Delete type=2 #7

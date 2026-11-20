@@ -1,0 +1,30 @@
+- generic [ref=e1]:
+  - generic [ref=e4]:
+    - generic [ref=e5]:
+      - generic [ref=e6]: Welcome Back
+      - generic [ref=e7]: Loging in to your asset management dashboard
+    - generic [ref=e8]:
+      - generic [ref=e9]:
+        - generic [ref=e10]:
+          - text: Email Address
+          - textbox "Email Address" [active] [ref=e15]:
+            - /placeholder: john@company.com
+        - generic [ref=e16]:
+          - text: Password
+          - generic [ref=e17]:
+            - textbox "Password" [ref=e21]:
+              - /placeholder: Enter your password
+            - button [ref=e22] [cursor=pointer]
+        - generic [ref=e26]:
+          - generic [ref=e27]:
+            - checkbox "Remember me" [ref=e28]
+            - generic [ref=e29]: Remember me
+          - button "Forgot password?" [ref=e30] [cursor=pointer]
+        - button "Sign In" [ref=e31] [cursor=pointer]
+      - generic [ref=e32]:
+        - text: Don't have an account?
+        - link "Sign Up" [ref=e33] [cursor=pointer]:
+          - /url: /signup
+  - region "Notifications (F8)":
+    - list
+  - alert [ref=e34]

@@ -3,9 +3,11 @@ name: Playwright Automation Tests
 
 on:
   push:
-    branches: [main, master]
+    branches: [main, master, feature]
+
   pull_request:
     branches: [main, master]
+
   workflow_dispatch:
 
 permissions:
@@ -13,37 +15,43 @@ permissions:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    # IMPORTANT: Use Ubuntu 24.04
+    runs-on: ubuntu-24.04
 
     steps:
+
+      # 1. Checkout repository
       - name: Checkout repository
         uses: actions/checkout@v6
 
+      # 2. Setup Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
           node-version: lts/*
           cache: npm
 
+      # 3. Install dependencies
       - name: Install dependencies
         run: npm ci
 
+      # 4. Install Playwright Chromium
       - name: Install Playwright browsers
-        run: npx playwright install --with-deps
+        run: npx playwright install --with-deps chromium
 
+      # 5. Run OrangeHRM ,SauceDemo, Parabank tests
       - name: Run Playwright tests
-        run: npx playwright test
-         tests/auth/loginpage.spec.js
-         tests/demo/loginpage1.spec.js
-         tests/demo/codegen.spec.js
-         tests/demo/example-test.spec.js
-         tests/demo/homepage.spec.js
-         tests/demo/screenshot.spec.js
+        run: |
+          npx playwright test tests/orangehrm/
+          npx playwright test tests/saucedemo/
+          npx playwright test tests/parabank/
 
+      # 6. Upload HTML report
       - name: Upload Playwright report
-        if: ${{ !cancelled() }}
+        if: always()
         uses: actions/upload-artifact@v5
         with:
           name: playwright-report
           path: playwright-report/
           retention-days: 14
+          if-no-files-found: ignore

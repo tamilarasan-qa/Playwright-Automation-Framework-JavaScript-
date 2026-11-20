@@ -7,15 +7,27 @@ const fs = require('fs');
 
 const PROJECT_ROOT = path.resolve(__dirname, '..');
 
+// Folder where the Playwright script saves QA_Outreach.xlsx
+const OUTPUT_DIR =
+  'D:\\script\\script\\Playwright_Automation\\tests\\output';
+
 const EXCEL_FILE = path.join(
-  PROJECT_ROOT,
+  OUTPUT_DIR,
   'QA_Outreach.xlsx'
+);
+
+// Permanent log of every address already emailed.
+// The Playwright script never overwrites this file, so an address
+// is only ever emailed once, even if QA_Outreach.xlsx is regenerated.
+const SENT_LOG = path.join(
+  OUTPUT_DIR,
+  'sent_emails.json'
 );
 
 const RESUME_FILE = path.join(
   PROJECT_ROOT,
   'resume',
-  'Tamilarasan_QA_Engineer_Playwright.pdf'
+  'Tamilarasan_QA_Engineer.pdf'
 );
 
 // Keep false for preview mode.
@@ -41,6 +53,30 @@ function normalizeHeader(value) {
         .trim()
         .toLowerCase()
         .replace(/[^a-z]/g, '');
+}
+
+// ------------------------------------------------------------
+// SENT LOG HELPERS
+// ------------------------------------------------------------
+
+function loadSentLog() {
+    try {
+        return JSON.parse(
+            fs.readFileSync(SENT_LOG, 'utf8')
+        );
+    } catch {
+        return {};
+    }
+}
+
+function saveSentLog(log) {
+    fs.mkdirSync(OUTPUT_DIR, { recursive: true });
+
+    fs.writeFileSync(
+        SENT_LOG,
+        JSON.stringify(log, null, 2),
+        'utf8'
+    );
 }
 
 async function main() {
@@ -111,6 +147,17 @@ async function main() {
         console.log('SMTP connection verified.');
     }
 
+    // Load permanent sent log
+    const sentLog = loadSentLog();
+
+    console.log(
+        'Previously sent addresses in log:',
+        Object.keys(sentLog).length
+    );
+
+    // Addresses handled in this run (blocks duplicates inside the sheet)
+    const seenThisRun = new Set();
+
     let sent = 0;
     let failed = 0;
     let skipped = 0;
@@ -143,11 +190,16 @@ async function main() {
             statusCell.text || ''
         ).trim().toUpperCase();
 
-        // Skip emails already sent
+        // Skip emails already sent (per Excel status)
         if (currentStatus === 'SENT') {
             console.log(
                 `Row ${rowNum}: already SENT; skipped.`
             );
+
+            if (toEmail) {
+                seenThisRun.add(toEmail.toLowerCase());
+            }
+
             skipped++;
             continue;
         }
@@ -177,6 +229,34 @@ async function main() {
             continue;
         }
 
+        const emailKey = toEmail.toLowerCase();
+
+        // Already sent in ANY previous run (permanent log)
+        if (sentLog[emailKey]) {
+            console.log(
+                `Row ${rowNum}: ${emailKey} already sent on ` +
+                `${sentLog[emailKey].sentAt}; skipped.`
+            );
+
+            statusCell.value = 'SENT';
+            seenThisRun.add(emailKey);
+            skipped++;
+            continue;
+        }
+
+        // Same address appears more than once in this sheet
+        if (seenThisRun.has(emailKey)) {
+            console.log(
+                `Row ${rowNum}: duplicate ${emailKey} in this run; skipped.`
+            );
+
+            statusCell.value = 'SKIPPED - Duplicate';
+            skipped++;
+            continue;
+        }
+
+        seenThisRun.add(emailKey);
+
         console.log(`\nRow ${rowNum}`);
         console.log('To:', toEmail);
         console.log('Subject:', subject);
@@ -185,7 +265,7 @@ async function main() {
             path.basename(RESUME_FILE)
         );
 
-        // Preview mode: never send
+        // Preview mode: never send, never write to the log
         if (!SEND_EMAILS) {
             console.log('PREVIEW ONLY - not sent.');
             previewed++;
@@ -207,17 +287,33 @@ async function main() {
                 attachments: [
                     {
                         filename:
-                            'Tamilarasan_QA_Engineer_Playwright.pdf',
+                            'Tamilarasan_QA_Engineer.pdf',
                         path: RESUME_FILE,
                         contentType: 'application/pdf'
                     }
                 ]
             });
 
+            // 1) Record in the permanent log FIRST.
+            //    It cannot be wiped by regenerating the Excel
+            //    and cannot fail because Excel is open.
+            sentLog[emailKey] = {
+                sentAt: new Date().toISOString(),
+                messageId: info.messageId
+            };
+            saveSentLog(sentLog);
+
+            // 2) Then update the Excel status (best effort)
             statusCell.value = 'SENT';
 
-            // Save immediately after successful send
-            await workbook.xlsx.writeFile(EXCEL_FILE);
+            try {
+                await workbook.xlsx.writeFile(EXCEL_FILE);
+            } catch (writeError) {
+                console.warn(
+                    'Could not update Excel (is it open?):',
+                    writeError.message
+                );
+            }
 
             sent++;
 
@@ -230,6 +326,7 @@ async function main() {
             await sleep(2000);
 
         } catch (error) {
+            // Not added to the sent log, so it can be retried next run
             statusCell.value = 'FAILED';
             failed++;
 
@@ -238,13 +335,27 @@ async function main() {
                 error.message
             );
 
-            // Save failure status
-            await workbook.xlsx.writeFile(EXCEL_FILE);
+            // Save failure status (best effort)
+            try {
+                await workbook.xlsx.writeFile(EXCEL_FILE);
+            } catch (writeError) {
+                console.warn(
+                    'Could not update Excel (is it open?):',
+                    writeError.message
+                );
+            }
         }
     }
 
     // 8. Save final status updates
-    await workbook.xlsx.writeFile(EXCEL_FILE);
+    try {
+        await workbook.xlsx.writeFile(EXCEL_FILE);
+    } catch (writeError) {
+        console.warn(
+            'Could not save final Excel update (is it open?):',
+            writeError.message
+        );
+    }
 
     console.log('\n===== OUTREACH SUMMARY =====');
     console.log('Sent:', sent);

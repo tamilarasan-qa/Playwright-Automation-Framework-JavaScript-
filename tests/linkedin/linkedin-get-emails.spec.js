@@ -25,8 +25,11 @@ const INPUT_CSV = path.resolve(
     'linkedin_hiring_last24h.csv'
 );
 
-const OUTPUT_XLSX = path.resolve(
-    process.cwd(),
+// Output folder for QA_Outreach.xlsx
+const OUTPUT_DIR = 'D:\\script\\script\\Playwright_Automation\\tests\\output';
+
+const OUTPUT_XLSX = path.join(
+    OUTPUT_DIR,
     'QA_Outreach.xlsx'
 );
 
@@ -605,24 +608,29 @@ function generateEmailBody(
 
 ${opening}
 
-I have 4.5 years of experience in QA and Software Testing, with hands-on experience in:
-- Manual Testing
-- Functional, Regression, Integration and End-to-End Testing
-- API Testing using Postman
-- Database Testing - SQL, PostgreSQL and MongoDB
-- Web and Mobile Application Testing
-- Jira and Agile/Scrum
-- Playwright with JavaScript
-- Git and GitHub
+I am a QA Engineer with 4.5 years of experience in Manual, API, Database, Web and Mobile Application Testing within product-based SaaS environments.
 
-I am currently available as an Immediate Joiner and am open to Bangalore, Hybrid and Remote opportunities.
-I have attached my updated resume for your consideration.
-Please let me know if my profile matches the requirement.
+My key skills include:
+
+- Manual & Functional Testing – Functional, Regression, Integration, System, Smoke, Sanity, Exploratory, End-to-End and UAT
+- Web & Mobile Testing – Web, Android, iOS and Cross-Browser Testing
+- API Testing – REST APIs, Postman, CRUD Operations, Request/Response Validation, JSON & Schema Validation, OAuth 2.0 and Bearer Token Authentication
+- Database Testing – SQL, PostgreSQL and MongoDB, including CRUD, Data Consistency, Backend Validation and Aggregation
+- QA Processes – Requirement Analysis, Test Planning & Strategy, Test Case Design, RTM, Defect Lifecycle Management, Root Cause Analysis and Release Validation
+- Automation – Playwright with JavaScript, Playwright Test Runner, Locators, Assertions, Page Object Model (POM), Wait Handling, Cross-Browser Execution, Screenshot on Failure and HTML Reporting
+- Programming & Tools – JavaScript (ES6), Node.js, npm, Git, GitHub, Visual Studio Code and Jira
+- CI/CD – GitHub Actions workflow for automated Playwright test execution
+- AI-Assisted QA – Claude, ChatGPT and GitHub Copilot for test scenario generation, edge-case identification, SQL assistance, Playwright coding and debugging
+- Methodologies – Agile/Scrum, SDLC and STLC
+
+I am currently an Immediate Joiner and open to opportunities in Bangalore, Chennai and Hyderabad, including Hybrid and Remote roles.
+
+I have attached my updated resume for your consideration. Please let me know if my profile matches the requirement.
 
 Thanks & Regards,
 Tamilarasan R
 QA Engineer
-8122286890
++91 8122286890
 Bangalore`;
 }
 
@@ -1147,6 +1155,9 @@ async function createExcelFile() {
     // SAVE
     // ========================================================
 
+    // Create output folder if it does not exist
+    fs.mkdirSync(OUTPUT_DIR, { recursive: true });
+
     await workbook.xlsx.writeFile(
         OUTPUT_XLSX
     );
@@ -1396,82 +1407,108 @@ test('LinkedIn Hiring Post Extractor', async ({ page }) => {
         );
     }
 
-    // ============================================================
-    // 5. LATEST FILTER
-    // ============================================================
+ // ============================================================
+// 5. SORT BY → LATEST
+// ============================================================
 
-    console.log('\n[5] Selecting Latest...');
+console.log('\n[5] Selecting Latest...');
 
-    try {
+try {
 
-        const sortButton =
-            page.getByRole('button', {
-                name: 'Filter by Sort by'
-            });
+    const sortButton = page.getByRole('button', {
+        name: 'Filter by Sort by'
+    });
 
-        if (await sortButton.count() > 0) {
+    if (await sortButton.count() > 0) {
 
-            await sortButton.first().click();
+        // Click Sort by
+        await sortButton.first().click();
 
-            await page.waitForTimeout(3000);
+        console.log('Sort by clicked.');
 
-            const latestRadio =
-                page.getByRole('radio', {
-                    name: 'Latest'
-                });
+        // Wait for Sort by menu
+        await page.waitForTimeout(1500);
 
-            if (await latestRadio.count() > 0) {
+        // Radio option inside the Sort by dropdown (exact match so
+        // post text containing the word "latest" is never matched)
+        let latest = page.getByRole('radio', { name: 'Latest' });
 
-                await latestRadio.first().click();
-
-                await page.waitForTimeout(3500);
-
-                console.log(
-                    'Latest selected.'
-                );
-            }
+        if (await latest.count() === 0) {
+            latest = page.getByText('Latest', { exact: true });
         }
 
-    } catch (error) {
+        if (await latest.count() > 0) {
 
-        console.log(
-            'Latest filter issue:',
-            error.message
-        );
-    }
+            // Click Latest
+            await latest.first().click();
 
-    // ============================================================
-    // 6. SHOW RESULTS
-    // ============================================================
+            console.log('Latest clicked.');
 
-    console.log('\n[6] Checking Show results...');
+            // Wait for selection to register
+            await page.waitForTimeout(1500);
 
-    try {
+        } else {
 
-        const showResults =
-            page.getByRole('link', {
-                name: 'Show results'
-            });
-
-        if (await showResults.count() > 0) {
-
-            await showResults.first().click();
-
-            await page.waitForTimeout(3500);
-
-            console.log(
-                'Show results clicked.'
-            );
+            console.log('Latest option not found.');
         }
 
-    } catch (error) {
+    } else {
 
-        console.log(
-            'Show results issue:',
-            error.message
-        );
+        console.log('Sort by button not found.');
     }
 
+} catch (error) {
+
+    console.log(
+        'Latest filter issue:',
+        error.message
+    );
+}
+
+
+// ============================================================
+// 6. SHOW RESULTS
+// ============================================================
+
+console.log('\n[6] Clicking Show results...');
+
+try {
+
+    // Inspector shows this as a link; fall back to button just in case
+    let showResults = page.getByRole('link', {
+        name: 'Show results'
+    });
+
+    if (await showResults.count() === 0) {
+        showResults = page.getByRole('button', {
+            name: 'Show results'
+        });
+    }
+
+    if (await showResults.count() > 0) {
+
+        // Click Show results
+        await showResults.first().click();
+
+        console.log('Show results clicked.');
+
+        // Wait 15 seconds for results to load
+        await page.waitForTimeout(15000);
+
+        console.log('15 seconds wait completed.');
+
+    } else {
+
+        console.log('Show results not found.');
+    }
+
+} catch (error) {
+
+    console.log(
+        'Show results issue:',
+        error.message
+    );
+}
     // ============================================================
     // 7. LOAD POSTS
     // ============================================================
@@ -2603,12 +2640,31 @@ test('LinkedIn Hiring Post Extractor', async ({ page }) => {
         return false;
     }
 
+    // "Open to work" posts are job seekers, not hiring posts - ignore them
+    function isOpenToWork(item) {
+
+        const text = [
+            item.postText,
+            item.jobTitle
+        ]
+            .filter(Boolean)
+            .join(' ')
+            .toLowerCase()
+            .replace(/[\s_-]+/g, ' ');
+
+        return (
+            text.includes('open to work') ||
+            text.includes('opentowork')
+        );
+    }
+
     const last24Hours =
         uniqueResults.filter(
             item =>
                 isWithinLast24Hours(
                     item.posted
-                )
+                ) &&
+                !isOpenToWork(item)
         );
 
     console.log(
